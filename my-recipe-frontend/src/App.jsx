@@ -11,13 +11,18 @@ function App() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
     try {
-      const response = await axios.post("/generate_recipe", { ingredients });
+      const response = await axios.post(
+        "http://localhost:8000/generate_recipe",
+        { ingredients },
+      );
       setRecipe(response.data);
     } catch (err) {
+      console.error("Recipe generation error:", err);
       setError(
         err.response?.data?.detail ||
-          "Failed to generate recipe. Check if backend is running.",
+          "Failed to generate recipe. Make sure backend is running.",
       );
     } finally {
       setLoading(false);
@@ -74,6 +79,17 @@ function App() {
                 <strong>Tips:</strong> {recipe.additional_tips}
               </p>
             )}
+
+            {/* Optional reset button */}
+            <button
+              onClick={() => {
+                setRecipe(null);
+                setIngredients("");
+              }}
+              className="mt-6 w-full py-2 px-4 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Try Another Recipe
+            </button>
           </div>
         )}
       </div>
